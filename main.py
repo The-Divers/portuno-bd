@@ -1,6 +1,6 @@
-from DAO.SemesterDAO import insertSemester, getOneSemester
+from DAO.SemesterDAO import *
 from entities.Semester import Semester
+from datetime import datetime
 
 if __name__ == '__main__':
-    semester = Semester("2022.1", "02/03/2022", "02/07/2022")
-
+    deleteSemester("2022.1")
