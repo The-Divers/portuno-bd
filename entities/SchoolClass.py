@@ -1,4 +1,4 @@
-class Class:
+class SchoolClass:
     def __init__(self, id, day_week, subject):
         self.id = id
         self.day_week = day_week

@@ -1,6 +1,5 @@
-from DAO.SemesterDAO import *
-from entities.Semester import Semester
-from datetime import datetime
+from DAO import SemesterDAO, SchoolClassDAO, UserDAO
+from entities import User, SchoolClass, Semester, Classroom, Professor, Ocupancy, Permission
 
 if __name__ == '__main__':
-    deleteSemester("2022.1")
+    UserDAO.deleteUser(2)

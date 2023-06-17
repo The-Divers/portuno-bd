@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class Semester:
     def __init__(self, name, beginning_date, ending_date):
         self.name = name

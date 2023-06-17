@@ -1,9 +1,8 @@
-from entities.Semester import Semester
-from datetime import datetime
+from entities.SchoolClass import SchoolClass
 import psycopg2
 import traceback
 
-class SemesterDAO:
+class SchoolClassDao:
     def __init__(self):
         self.USER = "postgres"
         self.PASSWORD = "Jv4984538171"
@@ -15,16 +14,13 @@ class SemesterDAO:
         return psycopg2.connect(user=self.USER, password=self.PASSWORD,
                                 host=self.HOST, port=self.PORT, database=self.DATABASE)
 
-def insertSemester(semester):
+def insertSchoolClass(schoolClass):
     try:
-        connection = SemesterDAO().openConnection()
+        connection = SchoolClassDao().openConnection()
         cursor = connection.cursor()
 
-        beginning_date = datetime.strptime(semester.beginning_date, '%d/%m/%Y')
-        ending_date = datetime.strptime(semester.ending_date, '%d/%m/%Y')
-
-        cursor.execute(f"INSERT INTO semester (name, beginning_date, ending_date) "
-                       f"VALUES ('{semester.name}', '{beginning_date}', '{ending_date}')")
+        cursor.execute(f"INSERT INTO class (id, day_week, subject) "
+                       f"VALUES ('{schoolClass.id}', '{schoolClass.day_week}', '{schoolClass.subject}')")
         connection.commit()
         if cursor.rowcount > 0:
             print("Success insert!")
@@ -35,54 +31,49 @@ def insertSemester(semester):
             cursor.close()
         connection.close()
 
-def getOneSemester(name):
-    semester = None  # Inicializa a variável semester antes do bloco try
+def getOneSchoolClass(id):
+    schoolClass = None
     try:
-        connection = SemesterDAO().openConnection()
+        connection = SchoolClassDao().openConnection()
         cursor = connection.cursor()
-        cursor.execute(f"SELECT * FROM semester WHERE name = '{name}'")
+        cursor.execute(f"SELECT * FROM class WHERE id = '{id}'")
         register = cursor.fetchone()
         if register:
-            semester = Semester(register[0], register[1], register[2])
+            schoolClass = SchoolClass(register[0], register[1], register[2])
     except (Exception, psycopg2.Error) as error:
         traceback.print_exc()
     finally:
         if connection:
             cursor.close()
             connection.close()
-        return semester
+        return schoolClass
 
-def getAllSemesters():
-    semesters = []
+def getAllSchoolClasses():
+    schoolClasses = []
     try:
-        connection = SemesterDAO().openConnection()
+        connection = SchoolClassDao().openConnection()
         cursor = connection.cursor()
-        cursor.execute(f"SELECT * FROM semester")
+        cursor.execute(f"SELECT * FROM class")
         registers = cursor.fetchall()
-        print(registers)
         for register in registers:
-            semesters.append(Semester(register[0], register[1], register[2]))
-
+            schoolClasses.append(SchoolClass(register[0], register[1], register[2]))
     except (Exception, psycopg2.Error) as error:
         traceback.print_exc()
     finally:
         if connection:
             cursor.close()
         connection.close()
-        return registers
+        return schoolClasses
 
-def updateSemester(name, newSemester):
+def updateSchoolClass(id, newSchoolClass):
     try:
-        connection = SemesterDAO().openConnection()
+        connection = SchoolClassDao().openConnection()
         cursor = connection.cursor()
 
-        beginning_date = datetime.strptime(newSemester.beginning_date, '%d/%m/%Y')
-        ending_date = datetime.strptime(newSemester.ending_date, '%d/%m/%Y')
-
-        cursor.execute(f"UPDATE semester SET name = '{newSemester.name}', "
-                       f"beginning_date = '{beginning_date}', "
-                       f"ending_date = '{ending_date}' "
-                       f"WHERE name = '{name}'")
+        cursor.execute(f"UPDATE class SET "
+                       f"day_week = '{newSchoolClass.day_week}', "
+                       f"subject = '{newSchoolClass.subject}' "
+                       f"WHERE id = '{id}'")
 
         connection.commit()
         if cursor.rowcount > 0:
@@ -94,11 +85,11 @@ def updateSemester(name, newSemester):
             cursor.close()
         connection.close()
 
-def deleteSemester(name):
+def deleteSchoolClass(id):
     try:
-        connection = SemesterDAO().openConnection()
+        connection = SchoolClassDao().openConnection()
         cursor = connection.cursor()
-        cursor.execute(f"DELETE FROM semester WHERE name= '{name}'")
+        cursor.execute(f"DELETE FROM class WHERE id= '{id}'")
         connection.commit()
         if cursor.rowcount > 0:
             print("Success delete!")
