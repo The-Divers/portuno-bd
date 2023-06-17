@@ -1,5 +1,6 @@
 from DAO import SemesterDAO, SchoolClassDAO, UserDAO
-from entities import User, SchoolClass, Semester, Classroom, Professor, Ocupancy, Permission
+from entities.User import User
 
 if __name__ == '__main__':
-    UserDAO.deleteUser(2)
+    user = User(509697, "João Victor Alves", "Jv1234", 85, 992136744)
+    UserDAO.insertUser(user)
